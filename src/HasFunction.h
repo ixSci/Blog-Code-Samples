@@ -1,18 +1,16 @@
 #pragma once
 
-typedef char False_t;
-typedef char True_t[2];
+#include <type_traits>
 
 template <typename Type>
 struct HasFunctionSort
 {
-    typedef void (Type::*Signature)();
-    template<typename T, Signature = &T::sort>
-    class Dummy;
-
     template<typename T>
-    static True_t& test(T*, Dummy<T>* = 0);
-    static False_t& test(...);
+    static auto test(T&&) -> decltype(std::declval<T>().sort(), std::true_type{});
+    static std::false_type test(...);
 
-    static const bool value = sizeof(test(static_cast<Type*>(0))) == sizeof(True_t);
+    static constexpr bool value = std::is_same<decltype(test(std::declval<Type>())), std::true_type>::value;
 };
+
+template <typename T>
+constexpr bool HasFunctionSort_v = HasFunctionSort<T>::value;

@@ -2,13 +2,13 @@
 #include <algorithm>
 #include <vector>
 #include <list>
-#include "EnableIf.h"
+#include <type_traits>
 #include "HasFunction.h"
 
 using namespace std;
 
 template<typename Container>
-typename EnableIf<HasFunctionSort<Container>::value, void>::type
+enable_if_t <HasFunctionSort_v<Container>>
 sort(Container& container)
 {
     cout << "Calling member sort function\n";
@@ -16,11 +16,11 @@ sort(Container& container)
 }
 
 template<typename Container>
-typename EnableIf<!HasFunctionSort<Container>::value, void>::type
+enable_if_t<!HasFunctionSort_v<Container>>
 sort(Container& container)
 {
     cout << "Calling std::sort function\n";
-    sort(container.begin(), container.end());
+    sort(begin(container), end(container));
 }
 
 int main()

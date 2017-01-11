@@ -5,7 +5,8 @@ set(HEADERS src/HasFunction.h)
 
 set(SOURCES src/main.cpp
     ${HEADERS})
-    
+
+add_compile_options(-std=c++1z)
+
 add_executable(${PROJECT_NAME} ${SOURCES})
 
-set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 14)

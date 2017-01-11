@@ -2,15 +2,11 @@
 
 #include <type_traits>
 
-template <typename Type>
-struct HasFunctionSort
-{
-    template<typename T>
-    static auto test(T&&) -> decltype(std::declval<T>().sort(), std::true_type{});
-    static std::false_type test(...);
+template <typename Type, typename = void>
+struct HasFunctionSort : std::false_type {};
 
-    static constexpr bool value = std::is_same<decltype(test(std::declval<Type>())), std::true_type>::value;
-};
+template <typename Type>
+struct HasFunctionSort<Type, std::void_t<decltype(std::declval<Type>().sort())>> : std::true_type {};
 
 template <typename T>
 constexpr bool HasFunctionSort_v = HasFunctionSort<T>::value;

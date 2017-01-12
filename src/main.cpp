@@ -3,7 +3,7 @@
 #include <vector>
 #include <list>
 #include <type_traits>
-#include "HasFunction.h"
+#include "HasSortFunction.h"
 
 using namespace std;
 

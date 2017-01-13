@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.0)
 project(BlogCode)
 
 set(HEADERS src/CheckConcept.h
-        src/HasSortFunction.h)
+        src/HasEntity.h)
 
 set(SOURCES src/main.cpp
     ${HEADERS})

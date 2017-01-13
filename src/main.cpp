@@ -3,9 +3,11 @@
 #include <vector>
 #include <list>
 #include <type_traits>
-#include "HasSortFunction.h"
+#include "HasEntity.h"
 
 using namespace std;
+
+GENERATE_HAS_FUNCTION(Sort, sort())
 
 template<typename Container>
 enable_if_t <HasFunctionSort_v<Container>>

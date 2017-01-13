@@ -1,13 +1,14 @@
 cmake_minimum_required(VERSION 3.0)
 project(BlogCode)
 
-set(HEADERS src/CheckConcept.h
-        src/HasEntity.h)
+find_package(boost REQUIRED)
+
+include_directories(${Boost_INCLUDE_DIRS})
+
+set(HEADERS)
 
 set(SOURCES src/main.cpp
     ${HEADERS})
-
-add_compile_options(-std=c++1z)
 
 add_executable(${PROJECT_NAME} ${SOURCES})
 

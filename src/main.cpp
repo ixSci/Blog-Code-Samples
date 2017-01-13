@@ -3,11 +3,13 @@
 #include <vector>
 #include <list>
 #include <type_traits>
-#include "HasEntity.h"
+#include <boost/tti/has_member_function.hpp>
 
 using namespace std;
 
-GENERATE_HAS_FUNCTION(Sort, sort())
+BOOST_TTI_HAS_MEMBER_FUNCTION(sort)
+template<typename T>
+constexpr bool HasFunctionSort_v = has_member_function_sort<T, void>::value;
 
 template<typename Container>
 enable_if_t <HasFunctionSort_v<Container>>

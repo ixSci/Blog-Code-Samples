@@ -7,7 +7,8 @@ This repository contains code samples used in the articles published in my blog(
 ### Prerequisites ###
 
 * [CMake](https://cmake.org)
-* C++17 compatible compiler.
+* C++14 compatible compiler.
+* [Boost.TTI](http://www.boost.org/doc/libs/1_63_0/libs/tti/doc/html/index.html)
 
 The code has been tested on: *MSVC 2015 Update 3* & *gcc version 6.2.0*
 

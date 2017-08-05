@@ -7,6 +7,9 @@ This repository contains code samples used in the articles published in my blog(
 ### Prerequisites ###
 
 * [CMake](https://cmake.org)
+* C++17 compatible compiler
+
+The code has been tested on: *gcc version 7.1.0* 
 
 ### How to build? ###
 

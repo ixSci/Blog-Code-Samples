@@ -1,17 +1,56 @@
-#include <iostream>
-#include "DummyVector.h"
-#include "Dummy.h"
+#include <vector>
+#include <list>
+#include <string>
+#include "MixStaticWithDynamic.h"
+#include "Sort.h"
+#include "ReturnHeadache.h"
+#include "StaticIf.h"
 
-int main()
+using namespace std::string_literals;
+using namespace std;
+
+void mixStaticWithDynamicExample();
+void sortExample();
+void returnTypesExample();
+void staticIfExample();
+
+int main(int argc, char* argv[])
 {
-    std::vector<int> vector{1, 2, 3, 4, 5};
-    int value = 0;
-
-    DummyVector copyInit = DummyVector<int>{};
-    DummyVector initList{5.0, .3, .1, 5.67};
-    DummyVector initFromVec(vector.begin(), vector.end());
-
-    // Раскомментируйте, чтобы получить ошибку
-    //Dummy dummy = {value, 1};
-    Dummy dummy{value, 1};
+    mixStaticWithDynamicExample();
+    sortExample();
+    returnTypesExample();
+    staticIfExample();
+    return 0;
 }
+
+void mixStaticWithDynamicExample()
+{
+    mixStaticWithDynamicCorrect(1);
+    mixStaticWithDynamicCorrect("clone"s);
+    mixStaticWithDynamicCorrect("unique"s);
+    mixStaticWithDynamicCorrect(1.0);
+}
+
+void sortExample()
+{
+    vector<int> vector;
+    list<int> list;
+    sort(vector);
+    sort(list);
+}
+
+void returnTypesExample()
+{
+    static_assert(std::is_same_v<decltype(returnHeadache("string"s)), int>);
+    static_assert(std::is_same_v<decltype(returnHeadache(1)), std::string>);
+}
+
+void staticIfExample()
+{
+    StaticIf<int>::branch("stinger");
+    // Раскомментируйте, чтобы получить ошибку
+    //StaticIf<float>::branch("stinger");
+    StaticIf<float>::branch(282);
+}
+
+

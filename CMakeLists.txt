@@ -1,8 +1,10 @@
 cmake_minimum_required(VERSION 3.8)
 project(BlogCode)
 
-set(HEADERS src/DummyVector.h
-        src/Dummy.h)
+set(HEADERS src/Sort.h
+        src/MixStaticWithDynamic.h
+        src/ReturnHeadache.h
+        src/StaticIf.h)
 
 set(SOURCES src/main.cpp
         ${HEADERS})

@@ -1,56 +1,63 @@
-#include <vector>
-#include <list>
-#include <string>
-#include "MixStaticWithDynamic.h"
-#include "Sort.h"
-#include "ReturnHeadache.h"
-#include "StaticIf.h"
+#include <iostream>
+#include "Pods.h"
+#include "Person.h"
 
-using namespace std::string_literals;
 using namespace std;
 
-void mixStaticWithDynamicExample();
-void sortExample();
-void returnTypesExample();
-void staticIfExample();
+void decomposeArrayCopyExample();
+void decomposeArrayRefExample();
+void decomposeStructExample();
+void decomposePersonExample();
 
 int main(int argc, char* argv[])
 {
-    mixStaticWithDynamicExample();
-    sortExample();
-    returnTypesExample();
-    staticIfExample();
+    decomposeArrayCopyExample();
+    decomposeArrayRefExample();
+    decomposeStructExample();
+    decomposePersonExample();
     return 0;
 }
 
-void mixStaticWithDynamicExample()
+void decomposeArrayCopyExample()
 {
-    mixStaticWithDynamicCorrect(1);
-    mixStaticWithDynamicCorrect("clone"s);
-    mixStaticWithDynamicCorrect("unique"s);
-    mixStaticWithDynamicCorrect(1.0);
+    cout << "=== Copy Example ===\n";
+    int array[] = {1, 3, 5, 7, 9};
+    auto [a1, a2, a3, a4, a5] = array;
+    cout << "Third element before: " << a3 << "(" << array[2] << ")\n";
+    a3 = 4;
+    cout << "Third element after: " << a3 << "(" << array[2] << ")\n";
 }
 
-void sortExample()
+void decomposeArrayRefExample()
 {
-    vector<int> vector;
-    list<int> list;
-    sort(vector);
-    sort(list);
+    cout << "=== Reference Example ===\n";
+    int array[] = {1, 3, 5, 7, 9};
+    auto& [a1, a2, a3, a4, a5] = array;
+    cout << "Third element before: " << a3 << "(" << array[2] << ")\n";
+    a3 = 4;
+    cout << "Third element after: " << a3 << "(" << array[2] << ")\n";
 }
 
-void returnTypesExample()
+void decomposeStructExample()
 {
-    static_assert(std::is_same_v<decltype(returnHeadache("string"s)), int>);
-    static_assert(std::is_same_v<decltype(returnHeadache(1)), std::string>);
+    cout << "=== Structs Example ===\n";
+    auto [f, s, t] = SimpleStruct{};
+    cout << "first: " << f
+         << ", second: " << s
+         << ", third: " << t << "\n";
+    ComplexStruct complexStruct{};
+    auto& [simple, answer] = complexStruct;
+    complexStruct.simple.third = 3.33f;
+    cout << "simple.third: " << simple.third
+         << ", answer: " << answer << "\n";
 }
 
-void staticIfExample()
+void decomposePersonExample()
 {
-    StaticIf<int>::branch("stinger");
-    // Раскомментируйте, чтобы получить ошибку
-    //StaticIf<float>::branch("stinger");
-    StaticIf<float>::branch(282);
+    cout << "=== Person Example ===\n";
+    Person einstain{"Albert", "Einstein", 997};
+    const auto [id, first, last] = einstain;
+    cout << "ID: " << id
+         << ", First name: " << first
+         << ", Last name: " << last << "\n";
 }
-
-

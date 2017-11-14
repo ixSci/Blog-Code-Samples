@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.8)
 project(BlogCode)
 
-set(HEADERS src/Pods.h src/Person.h)
+set(HEADERS )
 
 set(SOURCES src/main.cpp
         ${HEADERS})

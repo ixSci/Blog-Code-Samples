@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.8)
 project(BlogCode)
 
-set(HEADERS )
+set(HEADERS src/Printer.h)
 
 set(SOURCES src/main.cpp
         ${HEADERS})

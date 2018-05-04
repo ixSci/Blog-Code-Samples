@@ -7,6 +7,10 @@ This repository contains code samples used in the articles published in my blog(
 ### Prerequisites ###
 
 * [CMake](https://cmake.org)
+* [Benchmark](https://github.com/google/benchmark)
+
+### How to setup? ###
+Download and build all the required libs listed in the Prerequisites section, copy `assets/LocalConfig.cmake.template` to `./LocalConfig.cmake` and set all the required paths there.
 
 ### How to build? ###
 

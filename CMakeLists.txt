@@ -11,16 +11,15 @@ endif()
 find_package(benchmark REQUIRED)
 
 set(HEADERS
-    src/Accounter.h
-    src/CopyMover.h
-    src/Indirectors.h
-    )
+    src/Storage.h
+    src/Person.h
+    src/Printers.h
+    src/Blob.h)
 
 set(SOURCES
     src/main.cpp
-    src/Accounter.cpp
-    src/CopyMover.cpp
-    src/Indirectors.cpp
+    src/Storage.cpp
+    src/Person.cpp
     ${HEADERS})
 
 add_executable(${PROJECT_NAME} ${SOURCES})

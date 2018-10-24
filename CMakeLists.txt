@@ -10,7 +10,7 @@ endif()
 
 find_package(benchmark REQUIRED)
 
-set(HEADERS)
+set(HEADERS src/Any.h)
 
 set(SOURCES
     src/main.cpp

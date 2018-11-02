@@ -12,6 +12,7 @@ namespace Details
     {
     public:
         virtual void* getData() = 0;
+        virtual std::type_index getType() const = 0;
         virtual std::unique_ptr<AnyBase> clone() const = 0;
         virtual ~AnyBase() = default;
     };
@@ -31,6 +32,11 @@ namespace Details
         void* getData() override
         {
             return &m_Data;
+        }
+
+        std::type_index getType() const override
+        {
+            return typeid(T);
         }
 
         std::unique_ptr<AnyBase> clone() const override
@@ -80,7 +86,7 @@ private:
 template <typename T>
 T AnyCast(const Any& any)
 {
-    if(dynamic_cast<Details::AnyBaseImpl<T>*>(any.m_AnyImpl.get()))
+    if(any.m_AnyImpl->getType() == typeid(T))
         return *(static_cast<T*>(any.m_AnyImpl->getData()));
     throw std::logic_error("Any doesn't hold object of specified type");
 }

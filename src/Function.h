@@ -1,9 +1,30 @@
 #include <memory>
 #include <type_traits>
 #include <utility>
+#include <functional>
 
 namespace Details
 {
+    template<typename Functor, typename... Args,
+        typename = std::enable_if_t<!std::is_member_function_pointer_v<Functor>>>
+    auto invokeImpl(Functor&& functor, Args&&... args)
+    {
+        if constexpr(std::is_same_v<std::invoke_result_t<Functor, Args...>, void>)
+            functor(std::forward<Args>(args)...);
+        else
+            return functor(std::forward<Args>(args)...);
+    }
+
+    template<typename MemberFun, typename ClassType,typename... Args,
+        typename = std::enable_if_t<std::is_member_function_pointer_v<MemberFun>>>
+    auto invokeImpl(MemberFun function, ClassType&& object, Args&&... args)
+    {
+        if constexpr(std::is_same_v<std::invoke_result_t<MemberFun, ClassType, Args...>, void>)
+            (object.*function)(std::forward<Args>(args)...);
+        else
+            return (object.*function)(std::forward<Args>(args)...);
+    }
+
     template<typename R, typename... Args>
     class FunctionBase
     {
@@ -29,7 +50,11 @@ namespace Details
 
         R operator()(Args... args) const override
         {
-            return m_Functor(args...);
+#ifdef CUSTOM_INVOKE
+            return invokeImpl(m_Functor, args...);
+#else
+            return std::invoke(m_Functor, args...);
+#endif
         }
 
         std::unique_ptr<FunctionBase<R, Args...>> clone() const override

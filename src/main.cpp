@@ -1,17 +1,22 @@
 #include <iostream>
 #include <utility>
+#include <string>
+#define CUSTOM_INVOKE
 #include "Function.h"
 
 using std::cout;
+using std::string;
+using namespace std::string_literals;
 
 int main()
 {
-    Function<void()> def{};
-    Function<void()> func{[]{ cout << "It lives!\n";}};
-    func();
-    Function<long(int)> square([](int i) { return i*i; });
-    auto square2 = std::move(square);
-    auto square3 = square2;
-    cout << "2^2=" << square2(2) << "\n";
-    cout << "3^2=" << square3(3) <<  "\n";
+    Function<size_t(const string&)> func{&string::size};
+    auto str{"Hey!"s};
+    cout << func(str) << "\n";
+#ifndef CUSTOM_INVOKE
+    Function<size_t(string* const)> func2{&string::size};
+    cout << func2(&str) << "\n";
+#endif
+    Function<void(const string&)> printer{[](auto str) { cout << str << "\n";}};
+    printer("ho ho");
 }

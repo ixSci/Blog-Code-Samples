@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.20)
 project(BlogCode)
 
 if(EXISTS "${CMAKE_SOURCE_DIR}/LocalConfig.cmake")

@@ -14,4 +14,6 @@ int main()
     std::cout << "Var type: " << var.type() << ", value=" << var.string() << "\n";
     var = 42;
     std::cout << "Var type: " << var.type() << ", value=" << var.integral() << "\n";
+    var = Variant{};
+    std::cout << "Var type: " << var.type() << "\n";
 }

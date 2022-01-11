@@ -8,8 +8,8 @@ public:
     enum Type{None, Integral, String};
 public:
     Variant();
-    explicit Variant(int integral);
-    explicit Variant(const std::string& string);
+    Variant(int integral);
+    Variant(const std::string& string);
     Variant(const Variant& rhs);
     Variant& operator=(const Variant& rhs);
     ~Variant();
@@ -18,12 +18,11 @@ public:
     const std::string& string() const;
 private:
     template<typename T>
+    requires std::is_scalar_v<T> || std::is_standard_layout_v<T>
     struct Member
     {
 	    Type type;
         T value;
-        static_assert(std::is_scalar_v<T> || std::is_standard_layout_v<T>,
-            "T should be of scalar or standard-layout type");
     };
 private:
     Member<int> m_Integral;

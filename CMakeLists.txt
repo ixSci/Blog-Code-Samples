@@ -5,7 +5,6 @@ set(HEADERS
     src/Variant.h)
 
 set(SOURCES
-    src/Variant.cpp
     src/main.cpp
     ${HEADERS})
 

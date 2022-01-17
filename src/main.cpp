@@ -6,14 +6,11 @@ using namespace std::string_literals;
 
 int main()
 {
-    Variant var;
-    std::cout << "Var type: " << var.type() << "\n";
-    var = 55;
-    std::cout << "Var type: " << var.type() << ", value=" << var.integral() << "\n";
+    Variant<int, std::string> var{55};
+    std::cout << "Var value=" << var.value<int>() << "\n";
     var = "hey"s;
-    std::cout << "Var type: " << var.type() << ", value=" << var.string() << "\n";
+    std::cout << "Var value=" << var.value<std::string>() << "\n";
     var = 42;
-    std::cout << "Var type: " << var.type() << ", value=" << var.integral() << "\n";
-    var = Variant{};
-    std::cout << "Var type: " << var.type() << "\n";
+    std::cout << "Var value=" << var.value<int>() << "\n";
+    var = {};;
 }

@@ -2,12 +2,49 @@
 
 #include <algorithm>
 #include <array>
+#include <typeindex>
 
 template<typename... Types>
 class Variant;
 
 namespace Details
 {
+    class StorageBase
+    {
+    public:
+        virtual std::unique_ptr<StorageBase> clone() const = 0;
+        virtual void* data() = 0;
+        virtual std::type_index typeIndex() = 0;
+        virtual ~StorageBase() = default;
+    };
+
+    template<typename T>
+    class StorageImpl final: public StorageBase
+    {
+    public:
+        explicit StorageImpl(const T& data):
+            m_Data{data}
+        {
+        }
+
+        std::unique_ptr<StorageBase> clone() const override
+        {
+            return std::make_unique<StorageImpl<T>>(m_Data);
+        }
+
+        void* data() override
+        {
+            return &m_Data;
+        }
+
+        std::type_index typeIndex() override
+        {
+            return typeid(T);
+        }
+    private:
+        T m_Data;
+    };
+
     template<typename T, typename... Ts>
     consteval int getTypeIndex()
     {
@@ -16,59 +53,14 @@ namespace Details
         return answer != answers.end() ? std::distance(answers.begin(), answer) : -1;
     }
 
-    template<unsigned currentIndex, typename T, typename... Tail>
-    void copy(unsigned sourceTypeIndex, const void* source, void* destination)
-    {
-        if(sourceTypeIndex == currentIndex)
-            std::construct_at(static_cast<T*>(destination), *static_cast<const T*>(source));
-        else if constexpr(sizeof...(Tail) > 0)
-            copy<currentIndex + 1, Tail...>(sourceTypeIndex, source, destination);
-    }
-
-    template<unsigned currentIndex, typename T, typename... Tail>
-    void destroy(unsigned typeIndex, void* storage)
+    template<unsigned currentIndex, typename T, typename... Tail, typename Variant, typename F>
+    auto match(unsigned typeIndex, const Variant& variant, F&& function)
     {
         if(typeIndex == currentIndex)
-            std::destroy_at(static_cast<T*>(storage));
-        else if constexpr(sizeof...(Tail) > 0)
-            destroy<currentIndex + 1, Tail...>(typeIndex, storage);
+            return std::invoke(function, variant.template get<currentIndex>());
+        if constexpr(sizeof...(Tail) > 0)
+            return match<currentIndex + 1, Tail...>(typeIndex, variant, std::forward<F>(function));
     }
-
-    template<typename... Ts>
-    struct Getter
-    {
-        template<typename T>
-        static bool is(const Variant<Ts...>& var)
-        {
-            return getTypeIndex<T, Ts...>() == var.m_TypeIndex;
-        }
-
-        template<typename T>
-        static const T& get(const Variant<Ts...>& var)
-        {
-            if(is<T>(var))
-                return *(reinterpret_cast<const T*>(var.m_Storage));
-            throw std::logic_error("Wrong type!");
-        }
-
-        template<size_t Index>
-        static const auto& get(const Variant<Ts...>& var)
-        {
-            using Type = std::tuple_element_t<Index, std::tuple<Ts...>>;
-            return get<Type>(var);
-        }
-
-        template<unsigned currentIndex, typename T, typename... Tail, typename Variant, typename F>
-        static auto match(const Variant& variant, F&& function)
-        {
-            if(variant.m_TypeIndex == -1)
-                return;
-            if(variant.m_TypeIndex == currentIndex)
-                return std::invoke(function, get<currentIndex>(variant));
-            if constexpr(sizeof...(Tail) > 0)
-                return match<currentIndex + 1, Tail...>(variant, std::forward<F>(function));
-        }
-    };
 }
 
 template<typename... Ts>
@@ -80,47 +72,28 @@ public:
     Variant(T&& value);
     Variant(const Variant& rhs);
     Variant& operator=(const Variant& rhs);
-    ~Variant();
+    template<typename T> requires (Details::getTypeIndex<T, Ts...>() != -1)
+    const T& get() const;
+    template<size_t Index> requires (Index < sizeof...(Ts))
+    const auto& get() const;
+    template<typename T> requires (Details::getTypeIndex<T, Ts...>() != -1)
+    bool is() const;
+    template<typename F>
+    auto match(F&& function) const;
 private:
     void _copy(const Variant& rhs);
-    void _destroy();
-    friend struct Details::Getter<Ts...>;
 private:
     int m_TypeIndex = -1;
-    alignas(Ts...) std::byte m_Storage[std::max({sizeof(Ts)...})];
+    std::unique_ptr<Details::StorageBase> m_Storage;
 };
-
-template<typename T, typename... Ts> requires (Details::getTypeIndex<T, Ts...>() != -1)
-bool is(const Variant<Ts...>& var)
-{
-    return Details::Getter<Ts...>::template is<T>(var);
-}
-
-template<typename T, typename... Ts> requires (Details::getTypeIndex<T, Ts...>() != -1)
-const T& get(const Variant<Ts...>& var)
-{
-    return Details::Getter<Ts...>::template get<T>(var);
-}
-
-template<size_t Index, typename... Ts> requires (Index < sizeof...(Ts))
-const auto& get(const Variant<Ts...>& var)
-{
-    return Details::Getter<Ts...>::template get<Index>(var);
-}
-
-template<typename F, typename... Ts>
-auto match(F&& function, const Variant<Ts...>& var)
-{
-    return Details::Getter<Ts...>::template match<0, Ts...>(var, std::forward<F>(function));
-}
 
 template<typename... Ts>
 template<typename T>
-requires (Details::getTypeIndex<T, Ts...>() != -1)
+    requires (Details::getTypeIndex<T, Ts...>() != -1)
 Variant<Ts...>::Variant(T&& value):
-    m_TypeIndex{Details::getTypeIndex<T, Ts...>()}
+    m_TypeIndex{Details::getTypeIndex<T, Ts...>()},
+    m_Storage{std::make_unique<Details::StorageImpl<T>>(value)}
 {
-    std::construct_at(reinterpret_cast<T*>(m_Storage), std::forward<T>(value));
 }
 
 template<typename... Ts>
@@ -132,28 +105,51 @@ Variant<Ts...>::Variant(const Variant& rhs)
 template<typename... Ts>
 Variant<Ts...>& Variant<Ts...>::operator=(const Variant& rhs)
 {
-    _destroy();
     _copy(rhs);
     return *this;
 }
 
 template<typename... Ts>
-Variant<Ts...>::~Variant()
+template<typename T>
+    requires (Details::getTypeIndex<T, Ts...>() != -1)
+const T& Variant<Ts...>::get() const
 {
-    _destroy();
+    if(is<T>())
+        return *(reinterpret_cast<const T*>(m_Storage->data()));
+    throw std::logic_error("Wrong type!");
+}
+
+template <typename ... Ts>
+template <size_t Index> requires (Index < sizeof...(Ts))
+const auto& Variant<Ts...>::get() const
+{
+    using Type_t = std::tuple_element_t<Index, std::tuple<Ts...>>;
+    return get<Type_t>();
+}
+
+template<typename... Ts>
+template<typename T>
+requires (Details::getTypeIndex<T, Ts...>() != -1)
+bool Variant<Ts...>::is() const
+{
+    return m_Storage->typeIndex() == typeid(T);
+}
+
+template<typename... Ts>
+template<typename F>
+auto Variant<Ts...>::match(F&& function) const
+{
+    if(m_TypeIndex == -1)
+        return;
+    return Details::match<0, Ts...>(m_TypeIndex, *this, std::forward<F>(function));
 }
 
 template<typename... Ts>
 void Variant<Ts...>::_copy(const Variant& rhs)
 {
     if(rhs.m_TypeIndex != -1)
-        Details::copy<0, Ts...>(rhs.m_TypeIndex, rhs.m_Storage, m_Storage);
+        m_Storage = rhs.m_Storage->clone();
+    else
+        m_Storage.reset();
     m_TypeIndex = rhs.m_TypeIndex;
-}
-
-template<typename... Ts>
-void Variant<Ts...>::_destroy()
-{
-    if(m_TypeIndex != -1)
-        Details::destroy<0, Ts...>(m_TypeIndex, m_Storage);
 }

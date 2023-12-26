@@ -1,6 +1,5 @@
 bin
 *.TMP
-LocalConfig.cmake
+LocalConfig.json
 .idea
 .vs
-CMakeSettings.json

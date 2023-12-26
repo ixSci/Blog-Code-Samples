@@ -1,0 +1,79 @@
+{
+  "version": 8,
+  "include": [
+    "LocalConfig.json"
+  ],
+  "configurePresets": [
+    {
+      "name": "common",
+      "description": "Common preset to inherit by other presets.",
+      "inherits": "local-config",
+      "hidden": true,
+      "binaryDir": "${sourceDir}/bin/${presetName}",
+      "architecture": {
+        "value": "x64",
+        "strategy": "external"
+      }
+    },
+    {
+      "name": "vs",
+      "generator": "Visual Studio 17 2022",
+      "inherits": "common",
+      "architecture": "x64",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
+      }
+    },
+    {
+      "name": "nj",
+      "generator": "Ninja Multi-Config",
+      "inherits": "common"
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "vs-debug",
+      "configurePreset": "vs",
+      "configuration": "Debug"
+    },
+    {
+      "name": "vs-release",
+      "configurePreset": "vs",
+      "configuration": "Release"
+    },
+    {
+      "name": "nj-debug",
+      "configurePreset": "nj",
+      "configuration": "Debug"
+    },
+    {
+      "name": "nj-release",
+      "configurePreset": "nj",
+      "configuration": "Release"
+    }
+  ],
+  "testPresets": [
+    {
+      "name": "vs-debug",
+      "configurePreset": "vs",
+      "configuration": "Debug"
+    },
+    {
+      "name": "vs-release",
+      "configurePreset": "vs",
+      "configuration": "Release"
+    },
+    {
+      "name": "nj-debug",
+      "configurePreset": "nj",
+      "configuration": "Debug"
+    },
+    {
+      "name": "nj-release",
+      "configurePreset": "nj",
+      "configuration": "Release"
+    }
+  ]
+}

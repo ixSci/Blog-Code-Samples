@@ -1,0 +1,7 @@
+<Project>
+  <PropertyGroup>
+    <UseMultiToolTask>true</UseMultiToolTask>
+    <EnforceProcessCountAcrossBuilds>true</EnforceProcessCountAcrossBuilds>
+    <EnableClServerMode>true</EnableClServerMode>
+  </PropertyGroup>
+</Project>

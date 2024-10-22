@@ -1,18 +1,19 @@
 {
   "version": 8,
-  "include": [
-    "LocalConfig.json"
-  ],
   "configurePresets": [
     {
       "name": "common",
       "description": "Common preset to inherit by other presets.",
-      "inherits": "local-config",
       "hidden": true,
       "binaryDir": "${sourceDir}/bin/${presetName}",
       "architecture": {
         "value": "x64",
         "strategy": "external"
+      },
+      "cacheVariables": {
+        "ENABLE_PCH": true,
+        "REUSE_PCH": true,
+        "CMAKE_UNITY_BUILD": true
       }
     },
     {

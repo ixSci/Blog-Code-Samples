@@ -1,6 +1,6 @@
-#include <iostream>
+#include <print>
 
 int main()
 {
-    std::cout << "Hello Internet world!\n";
+    std::println("JSON log converter v{}, reporting for duty.", APP_VERSION);
 }

@@ -1,5 +1,4 @@
 bin
 *.TMP
-LocalConfig.json
 .idea
 .vs

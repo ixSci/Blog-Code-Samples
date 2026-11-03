@@ -1,11 +1,10 @@
 {
-  "version": 8,
+  "version": 10,
   "configurePresets": [
     {
       "name": "local-config",
       "hidden": true,
       "cacheVariables": {
-        "benchmark_DIR":"<Benchmark Root Path>/lib/cmake/benchmark"
       }
     }
   ]

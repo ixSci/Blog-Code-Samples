@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 4.0)
-project(BlogCode)
+project(BlogCode LANGUAGES CXX)
 
 set(HEADERS)
 

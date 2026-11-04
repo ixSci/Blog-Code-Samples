@@ -4,7 +4,7 @@ project(BlogCode)
 set(HEADERS)
 
 set(SOURCES
-    src/main.cpp
+    Sources/Main.cpp
     ${HEADERS})
 
 add_executable(${PROJECT_NAME} ${SOURCES})

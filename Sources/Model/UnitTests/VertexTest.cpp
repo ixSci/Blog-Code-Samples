@@ -3,6 +3,7 @@
 #include <gtest/gtest.h>
 #include <format>
 #include "Vertex.h"
+#include "CustomPrinters.h"
 
 using namespace testing;
 

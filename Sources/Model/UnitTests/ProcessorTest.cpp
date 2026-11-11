@@ -5,11 +5,6 @@
 
 using namespace testing;
 
-static void PrintTo(const Vertex& node, std::ostream *stream)
-{
-    *stream << "Fake Vertex: " << node.toString();
-}
-
 class ProcessorTest: public Test
 {};
 

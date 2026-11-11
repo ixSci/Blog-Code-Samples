@@ -2,8 +2,7 @@
 
 Vertex::Vertex(std::string_view name):
     m_Name{name}
-{
-}
+{}
 
 std::string Vertex::toString() const
 {

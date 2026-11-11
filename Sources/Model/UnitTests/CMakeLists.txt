@@ -4,11 +4,16 @@ project(${PARENT_PROJECT}.UnitTests LANGUAGES CXX)
 find_package(GTest 1.8)
 include(GoogleTest)
 
-set(MODEL_UT_HEADERS CustomPrinters.h)
+set(MODEL_UT_HEADERS
+        CustomPrinters.h
+        FakeProcessor.h
+)
 
 set(MODEL_UT_SOURCES
         CustomPrinters.cpp
         VertexTest.cpp
+        ProcessorTest.cpp
+        FakeProcessor.cpp
         ${MODEL_UT_HEADERS}
 )
 

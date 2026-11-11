@@ -3,6 +3,7 @@ project(Model LANGUAGES CXX)
 set(MODEL_HEADERS
         INode.h
         Vertex.h
+        INodeProcessor.h
 )
 set(MODEL_SOURCES
         Vertex.cpp

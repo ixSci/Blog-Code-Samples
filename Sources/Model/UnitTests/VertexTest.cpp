@@ -1,7 +1,7 @@
+#include <format>
 #include <string>
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
-#include <format>
 #include "Vertex.h"
 #include "CustomPrinters.h"
 

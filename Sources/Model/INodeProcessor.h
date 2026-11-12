@@ -1,10 +1,10 @@
 #pragma once
 
-#include "Vertex.h"
+#include "INode.h"
 
 class INodeProcessor
 {
 public:
-    virtual void processVertex(const Vertex& vertex) = 0;
+    virtual void processNode(const INode& node) = 0;
     virtual ~INodeProcessor() = default;
 };

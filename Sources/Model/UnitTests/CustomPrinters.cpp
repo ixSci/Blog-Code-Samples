@@ -1,6 +1,6 @@
 #include "CustomPrinters.h"
 
- void PrintTo(const Vertex& node, std::ostream* stream)
+ void PrintTo(const INode& node, std::ostream* stream)
 {
     *stream << node.toString();
 }

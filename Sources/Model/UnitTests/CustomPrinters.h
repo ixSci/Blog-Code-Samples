@@ -1,6 +1,6 @@
 #pragma once
 
 #include <ostream>
-#include "Vertex.h"
+#include "INode.h"
 
-void PrintTo(const Vertex& node, std::ostream* stream);
+void PrintTo(const INode& node, std::ostream* stream);

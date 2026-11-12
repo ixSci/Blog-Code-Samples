@@ -3,6 +3,7 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 #include "FakeProcessor.h"
+#include "Vertex.h"
 
 using namespace testing;
 
@@ -18,5 +19,5 @@ TEST_F(ProcessorTest, Processor_UninterestingCall_CallsCorrectPrintTo)
 {
     StrictMock<FakeProcessor> processor;
 
-    processor.processVertex(Vertex{"unexpected"});
+    processor.processNode(Vertex{"unexpected"});
 }

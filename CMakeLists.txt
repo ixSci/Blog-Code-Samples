@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 4.0)
 project(TrickyPrint LANGUAGES CXX)
 
 enable_testing()
+include_directories(Sources)
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
@@ -14,7 +15,9 @@ function(force_include TARGET_NAME INCLUDE_PATH)
     target_compile_options(${TARGET_NAME} PRIVATE ${_options})
 endfunction()
 
-set(HEADERS)
+set(HEADERS
+    Sources/PrintEnforcer.h
+)
 
 set(SOURCES
     Sources/Main.cpp

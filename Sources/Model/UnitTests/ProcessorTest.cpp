@@ -2,6 +2,7 @@
 #include <string>
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
+#include "CustomPrinters.h"
 #include "FakeProcessor.h"
 #include "Vertex.h"
 
